@@ -26,7 +26,7 @@ void loop()
  OLED.Render();
 }
 
-
+//shows input values, !-for debugging-!
 void DebugUI(int sensor, int button)
 {
  OLED.PrintToScreen(String(sensor), Vector2(0,0));
