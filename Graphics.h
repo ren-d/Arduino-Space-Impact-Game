@@ -17,6 +17,8 @@ class Graphics
     void Render();
     void blah();
     void Clear();
+    void Line(Vector2 point1, Vector2 point2);
+    void Rectangle(Vector2 point1, Vector2 point2);
     void Circle(Vector2 pos, int size, bool fill);
     void PrintToScreen(String text);
     void PrintToScreen(String text, Vector2 pos);

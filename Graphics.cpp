@@ -43,6 +43,15 @@ void Graphics::Circle(Vector2 pos, int size, bool fill)
     }
 }
 
+void Graphics::Line(Vector2 point1, Vector2 point2)
+{
+    display.drawLine(point1.x, point1.y, point2.x, point2.y, WHITE);
+}
+
+void Graphics::Rectangle(Vector2 point1, Vector2 point2)
+{
+    display.drawRect(point1.x, point1.y, point2.x, point2.y, WHITE);
+}
 void Graphics::PrintToScreen(String text)
 {
     display << text;
