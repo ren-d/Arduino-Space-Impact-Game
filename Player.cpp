@@ -2,7 +2,7 @@
 #include "Graphics.h"
 Player::Player()
 {
-
+    health = 1;
 }
 
 void Player::Move(Vector2 position, Graphics& OLED)
@@ -13,5 +13,13 @@ void Player::Move(Vector2 position, Graphics& OLED)
 
 void Player::Draw(Vector2 position, Graphics& OLED)
 {
-    OLED.Circle(position, 2, true);
+    if(health >= 1)
+    {
+        OLED.Circle(position, scale, true);
+    }
+}
+
+void Player::Update()
+{
+
 }
