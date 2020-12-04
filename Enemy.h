@@ -14,10 +14,10 @@ public:
     Enemy();
     Enemy(Vector2 pos, int scale, int speed, int health, bool canShoot);
     void Setup(Vector2 pos, int speed);
-    void Update(Graphics& OLED, Player& player);
+    void Update(Graphics& OLED, int yAxis);
     void Draw(Graphics& OLED);
     void Move();
-    bool HasCollided(Player& player);
+    bool HasCollided(int yAxis);
 private:
     Math mathf;
 };

@@ -22,12 +22,12 @@ void Enemy::Setup(Vector2 pos, int speed)
     this->position = pos;
     this->speed = speed;
 }
-void Enemy::Update(Graphics& OLED, Player& player)
+void Enemy::Update(Graphics& OLED, int yAxis)
 {
     Move();
-    if(HasCollided(player))
+    if(HasCollided(yAxis))
     {
-        player.health--;
+        Serial << "OK OBAMA" << endl;
     }
     Draw(OLED);
     if(position.x <= 0)
@@ -46,16 +46,13 @@ void Enemy::Move()
     this->position.x -= speed;
 }
 
-bool Enemy::HasCollided(Player& player)
+bool Enemy::HasCollided(int yAxis)
 {
-    int dx = abs(player.position.x - this->position.x);
-    Serial << dx << endl;
-    int dy = abs(player.position.y - this->position.y);
-    Serial << dy << endl;
-    Serial << dx * dx + dy * dy << endl;
-    float distance = mathf.SQRT((float(dx * dx + dy * dy)));
-    Serial << mathf.SQRT((dx * dx + dy * dy)) << endl;
-    if(distance < player.scale + this->scale)
+    int dx = abs(5 - this->position.x);
+    int dy = abs(yAxis - this->position.y);
+    
+    float distance = mathf.SQRT((dx * dx + dy * dy));
+    if(distance < 2 + this->scale)
     {
         return true;
     }

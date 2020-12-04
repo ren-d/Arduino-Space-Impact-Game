@@ -12,6 +12,7 @@ Player player;
 
 #include "Enemy.h"
 Enemy enemies[5];
+
 #include "Math.h"
 Math mathf;
 
@@ -38,16 +39,15 @@ void loop()
  int sensorValue = analogRead(A0) / 10.24;
  for(int i = 0; i < 5; i++)
  {
-     enemies[i].Update(OLED, player);
+     enemies[i].Update(OLED, mathf.Clamp(sensorValue, 19, 60));
  }
- 
+ Serial << mathf.Clamp(sensorValue, 19, 60) << endl;
  DebugUI(sensorValue, buttonPin);
  GameScreenUI();
  player.Draw(Vector2(5, mathf.Clamp(sensorValue, 19, 60)), OLED);
 
  
  OLED.Render();
- delay(2000);
 }
 
 //shows input values, !-for debugging-!
