@@ -19,6 +19,7 @@ Math mathf;
 void DebugUI(int sensor, int button);
 void GameScreenUI();
 
+bool damageCooldown = false;
 void setup()
 {
  Serial.begin(115200);
@@ -35,19 +36,48 @@ void setup()
 
 void loop()
 {
- OLED.Clear();
- int sensorValue = analogRead(A0) / 10.24;
- for(int i = 0; i < 5; i++)
- {
-     enemies[i].Update(OLED, mathf.Clamp(sensorValue, 19, 60));
- }
- Serial << mathf.Clamp(sensorValue, 19, 60) << endl;
- DebugUI(sensorValue, buttonPin);
- GameScreenUI();
- player.Draw(Vector2(5, mathf.Clamp(sensorValue, 19, 60)), OLED);
+    GameLoop();
+}
 
- 
- OLED.Render();
+void GameLoop()
+{
+    OLED.Clear();
+    int sensorValue = analogRead(A0) / 10.24;
+    player.Update(digitalRead(buttonPin), OLED);
+    
+    for(int i = 0; i < 5; i++)
+    {
+        enemies[i].Update(OLED);
+        if(damageCooldown == false)
+        {
+           if(enemies[i].HasCollided(mathf.Clamp(sensorValue, 19, 60)))
+           {
+               player.TakeDamage();
+               damageCooldown = true;
+               player.damageCooldown = 20;
+
+           }
+        }
+    }
+    
+    if(damageCooldown == true)
+    {
+       if(player.damageCooldown != 0)
+       {
+           player.damageCooldown--;
+       }
+       else
+       {
+           damageCooldown = false;
+       }  
+    }
+    
+    Serial << mathf.Clamp(sensorValue, 19, 60) << endl;
+    DebugUI(sensorValue, buttonPin);
+    GameScreenUI();
+    player.Draw(Vector2(5, mathf.Clamp(sensorValue, 19, 60)), damageCooldown, OLED);
+
+    OLED.Render();
 }
 
 //shows input values, !-for debugging-!
@@ -58,6 +88,8 @@ void DebugUI(int sensor, int button)
  OLED.PrintToScreen(String(digitalRead(button)));
  OLED.PrintToScreen(" ");
  OLED.PrintToScreen(String(player.health));
+ OLED.PrintToScreen(" ");
+ OLED.PrintToScreen(String(player.damageCooldown));
  OLED.endlg();
 }
 

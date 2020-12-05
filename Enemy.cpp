@@ -22,13 +22,9 @@ void Enemy::Setup(Vector2 pos, int speed)
     this->position = pos;
     this->speed = speed;
 }
-void Enemy::Update(Graphics& OLED, int yAxis)
+void Enemy::Update(Graphics& OLED)
 {
     Move();
-    if(HasCollided(yAxis))
-    {
-        Serial << "OK OBAMA" << endl;
-    }
     Draw(OLED);
     if(position.x <= 0)
     {

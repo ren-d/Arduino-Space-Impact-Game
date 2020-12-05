@@ -14,7 +14,7 @@ public:
     Enemy();
     Enemy(Vector2 pos, int scale, int speed, int health, bool canShoot);
     void Setup(Vector2 pos, int speed);
-    void Update(Graphics& OLED, int yAxis);
+    void Update(Graphics& OLED);
     void Draw(Graphics& OLED);
     void Move();
     bool HasCollided(int yAxis);
