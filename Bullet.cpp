@@ -8,7 +8,7 @@ void Bullet::Update(Graphics& OLED)
 {
     if(isShot)
     {
-        position.x += 3;
+        position.x += 5;
     }
 
     Draw(OLED);
