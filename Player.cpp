@@ -29,11 +29,19 @@ void Player::Draw(Vector2 position, bool onCooldown, Graphics& OLED)
         }
         else
         {
-            if(damageCooldown % 4 == 0)
+            if(damageCooldown >= 15)
             {
                 OLED.Circle(position, scale, false);
                 
                 
+            }
+            else if(damageCooldown >= 9)
+            {
+                OLED.Circle(position, scale, true);
+            }
+            else if(damageCooldown >= 1)
+            {
+                OLED.Circle(position, scale, false);
             }
             else
             {
