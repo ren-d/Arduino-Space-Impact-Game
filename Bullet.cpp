@@ -8,7 +8,7 @@ void Bullet::Update(Graphics& OLED)
 {
     if(isShot)
     {
-        position.x += 2;
+        position.x += 3;
     }
 
     Draw(OLED);
@@ -26,12 +26,11 @@ void Bullet::Draw(Graphics& OLED)
     {
         OLED.Circle(position, 1, true);
     }
-    
 }
 
 void Bullet::Destroy()
 {
-
+    isShot = false;
 }
 
 void Bullet::Initialize()

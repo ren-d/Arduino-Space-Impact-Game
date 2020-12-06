@@ -2,7 +2,6 @@
 #define BULLET_H
 #include "Graphics.h"
 #include "Vector2.h"
-
 class Bullet
 {
 public:

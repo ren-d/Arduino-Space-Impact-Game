@@ -22,7 +22,7 @@ void Enemy::Setup(Vector2 pos, int speed)
     this->position = pos;
     this->speed = speed;
 }
-void Enemy::Update(Graphics& OLED)
+void Enemy::Update(Graphics& OLED, Player& player)
 {
     Move();
     Draw(OLED);
@@ -30,22 +30,43 @@ void Enemy::Update(Graphics& OLED)
     {
         position.x = 125;
     }
+    for(int i = 0; i < 17; i++)
+    {
+        if(HasCollided(player.bullets[i].position))
+        {
+            Destroy();
+            player.bullets[i].Destroy();
+        }
+    }
 }
 
 void Enemy::Draw(Graphics& OLED)
 {
-    OLED.Circle(position, scale, false);
+    if(health >= 1)
+    {
+        OLED.Circle(position, scale, false);
+    }
+    
 }
 
 void Enemy::Move()
 {
-    this->position.x -= speed;
+    if(health >= 1)
+    {
+        this->position.x -= speed;
+    }
+    else
+    {
+        this->position =  Vector2(0,0);
+    }
+    
+    
 }
 
-bool Enemy::HasCollided(int yAxis)
+bool Enemy::HasCollided(Vector2 position)
 {
-    int dx = abs(5 - this->position.x);
-    int dy = abs(yAxis - this->position.y);
+    int dx = abs(position.x - this->position.x);
+    int dy = abs(position.y - this->position.y);
     
     float distance = mathf.SQRT((dx * dx + dy * dy));
     if(distance < 2 + this->scale)
@@ -56,4 +77,9 @@ bool Enemy::HasCollided(int yAxis)
     {
         return false;
     }
+}
+
+void Enemy::Destroy()
+{
+    health--;
 }
