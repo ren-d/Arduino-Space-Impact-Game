@@ -44,7 +44,7 @@ void GameLoop()
     OLED.Clear();
     int sensorValue = analogRead(A0) / 10.24;
     player.Update(digitalRead(buttonPin), OLED);
-    
+    /*
     for(int i = 0; i < 5; i++)
     {
         enemies[i].Update(OLED);
@@ -71,7 +71,7 @@ void GameLoop()
            damageCooldown = false;
        }  
     }
-    
+    */
     Serial << mathf.Clamp(sensorValue, 19, 60) << endl;
     DebugUI(sensorValue, buttonPin);
     GameScreenUI();

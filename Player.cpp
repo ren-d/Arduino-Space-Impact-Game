@@ -18,6 +18,7 @@ void Player::Move(Vector2 position, Graphics& OLED)
 
 void Player::Draw(Vector2 position, bool onCooldown, Graphics& OLED)
 {
+    this->position = position;
     if(health >= 1)
     {
         if(!onCooldown)
@@ -73,6 +74,7 @@ void Player::TakeDamage()
 
 void Player::Shoot(Bullet& bullet)
 {
-    bullet.position = this->position;
     bullet.isShot = true;
+    bullet.position.y = position.y;
+    bullet.position.x = position.x;
 }

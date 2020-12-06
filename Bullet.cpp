@@ -1,6 +1,4 @@
-/*
 #include "Bullet.h"
-
 Bullet::Bullet()
 {
     Initialize();
@@ -12,7 +10,14 @@ void Bullet::Update(Graphics& OLED)
     {
         position.x += 2;
     }
+
     Draw(OLED);
+
+    if(position.x > 120)
+    {
+        isShot = false;
+        position.x = 5;
+    }
 }
 
 void Bullet::Draw(Graphics& OLED)
@@ -31,7 +36,6 @@ void Bullet::Destroy()
 
 void Bullet::Initialize()
 {
-    position = Vector2(0,0);
     isShot = false;
 }
-*/
+

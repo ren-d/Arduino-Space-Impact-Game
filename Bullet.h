@@ -1,14 +1,12 @@
-/*
 #ifndef BULLET_H
 #define BULLET_H
 #include "Graphics.h"
 #include "Vector2.h"
-#include "Player.h"
 
 class Bullet
 {
 public:
-    Vector2 position = Vector2(0,0);
+    Vector2 position;
     bool isShot = false;
     Bullet();
     void Update(Graphics& OLED);
