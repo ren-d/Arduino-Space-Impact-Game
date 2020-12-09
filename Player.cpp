@@ -1,8 +1,9 @@
 #include "Player.h"
 Player::Player()
 {
+    score = 0;
     health = 3;
-    damageCooldown = 25;
+    damageCooldown = 0;
     bulletCooldown = 7;
     buttonBuffer = false;
     for (int i = 0; i < 17; i++)
@@ -57,30 +58,34 @@ void Player::Draw(Vector2 position, bool onCooldown, Graphics& OLED)
 void Player::Update(int buttonPin, Graphics& OLED)
 {
 
-    if(buttonPin == 0 && buttonBuffer == false)
+    if(health > 0)
     {
-        for(int i = 0; i < 17; i++)
+        if(buttonPin == 0 && buttonBuffer == false)
         {
-            if(bullets[i].isShot == false)
+            for(int i = 0; i < 17; i++)
             {
-                if(bulletCooldown < 0)
+                if(bullets[i].isShot == false)
                 {
-                    Shoot(bullets[i]);
-                    bulletCooldown = 7;
-                    buttonBuffer = false;
-                    break;
-                }
+                    if(bulletCooldown < 0)
+                    {
+                        Shoot(bullets[i]);
+                        bulletCooldown = 7;
+                        buttonBuffer = false;
+                        break;
+                    }
                 
+                }
             }
         }
-    }
-    for(int i = 0; i < 17; i++)
-    {
-        bullets[i].Update(OLED);
-    }
-    bulletCooldown--;
-    ButtonPress(buttonPin);
+        for(int i = 0; i < 17; i++)
+        {
+            bullets[i].Update(OLED);
+        }
+        bulletCooldown--;
+        ButtonPress(buttonPin);
 
+    }
+    
 }
 
 void Player::ButtonPress(int buttonPin) // Only activates the bullet when button is pressed and not held, if held it will not shoot more than once

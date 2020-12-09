@@ -2,7 +2,6 @@
 #include <iomanip>
 #include <iostream>
 #include "Vector2.h"
-
 int buttonPin = D5;
 
 #include "Graphics.h"
@@ -21,6 +20,7 @@ void DebugUI(int sensor, int button);
 void GameScreenUI();
 void MenuUI();
 bool damageCooldown = false;
+
 void setup()
 {
  Serial.begin(115200);
@@ -98,18 +98,30 @@ void GameLoop()
 //shows input values, !-for debugging-!
 void DebugUI(int sensor, int button)
 {
- OLED.PrintToScreen(String(mathf.Clamp(sensor, 19, 60)), Vector2(0,0));
- OLED.PrintToScreen(" ");
- OLED.PrintToScreen(String(digitalRead(button)));
- OLED.PrintToScreen(" ");
- OLED.PrintToScreen(String(player.health));
- OLED.PrintToScreen(" ");
- OLED.PrintToScreen(String(player.damageCooldown));
+ OLED.PrintToScreen(String(player.score), Vector2(0,5));
  OLED.endlg();
 }
 
 void GameScreenUI()
 {
+    switch(player.health)
+    {
+        case 3:
+            OLED.Circle(Vector2(90,7), 3, true);
+            OLED.Circle(Vector2(98,7), 3, true);
+            OLED.Circle(Vector2(106,7), 3, true);
+            break;
+        case 2:
+            OLED.Circle(Vector2(90,7), 3, true);
+            OLED.Circle(Vector2(98,7), 3, true);
+            break;
+        case 1:
+            OLED.Circle(Vector2(90,7), 3, true);
+            break;
+        default:
+            break;
+    }
+    
     OLED.Line(Vector2(0,16), Vector2(122,16));
     OLED.Line(Vector2(0,14), Vector2(122,14));
     OLED.Line(Vector2(122,0), Vector2(122,14));
@@ -123,7 +135,6 @@ void MenuUI()
     OLED.PrintToScreen("SPACE", Vector2(5,0));
     OLED.PrintToScreen("IMPACT", Vector2(20,8));
     OLED.Line(Vector2(0,15), Vector2(110,15));
-
     if(sensorValue > 50)
     {
         OLED.PrintToScreen("> Start Game", Vector2(37,21));

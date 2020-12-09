@@ -1,12 +1,12 @@
 #include "Arduino.h"
 #include "Streaming.h"
-
 #include "Vector2.h"
-
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306.h"
 
 #include "Graphics.h"
+
+
 Graphics::Graphics()
 {
     display.begin(SSD1306_SWITCHCAPVCC, OLED_SCREEN_I2C_ADDRESS);
@@ -52,6 +52,7 @@ void Graphics::Rectangle(Vector2 point1, Vector2 point2)
 {
     display.drawRect(point1.x, point1.y, point2.x, point2.y, WHITE);
 }
+
 void Graphics::PrintToScreen(String text)
 {
     display << text;

@@ -10,6 +10,7 @@ class Player
 public:
     Vector2 position;
     Bullet bullets[17];
+    int score;
     int health;
     int damageCooldown;
     int bulletCooldown;

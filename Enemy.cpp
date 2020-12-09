@@ -36,6 +36,11 @@ void Enemy::Update(Graphics& OLED, Player& player)
         {
             Destroy();
             player.bullets[i].Destroy();
+            player.score += 200;
+        }
+        else if(HasCollided(player.position) && player.damageCooldown == 0)
+        {
+            Destroy();
         }
     }
 }
