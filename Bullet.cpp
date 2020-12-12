@@ -8,7 +8,7 @@ void Bullet::Update(Graphics& OLED)
 {
     if(isShot)
     {
-        position.x += 5;
+        position.x += 4;
     }
 
     Draw(OLED);
@@ -31,6 +31,7 @@ void Bullet::Draw(Graphics& OLED)
 void Bullet::Destroy()
 {
     isShot = false;
+    position = Vector2(0,0);
 }
 
 void Bullet::Initialize()

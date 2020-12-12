@@ -48,9 +48,9 @@ void Graphics::Line(Vector2 point1, Vector2 point2)
     display.drawLine(point1.x, point1.y, point2.x, point2.y, WHITE);
 }
 
-void Graphics::Rectangle(Vector2 point1, Vector2 point2)
+void Graphics::Rectangle(Vector2 pos, Vector2 scale)
 {
-    display.drawRect(point1.x, point1.y, point2.x, point2.y, WHITE);
+    display.drawRect(pos.x, pos.y, scale.x, scale.y, WHITE);
 }
 
 void Graphics::PrintToScreen(String text)

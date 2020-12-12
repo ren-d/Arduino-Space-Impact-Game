@@ -11,11 +11,12 @@ public:
     int scale;
     int health;
     int speed;
-    bool canShoot;
+    bool isActive;
+    int type;
 
     Enemy();
-    Enemy(Vector2 pos, int scale, int speed, int health, bool canShoot);
-    void Setup(Vector2 pos, int speed);
+    Enemy(Vector2 pos, int scale, int speed, int health);
+    void Setup(Vector2 pos, int speed, int type);
     void Update(Graphics& OLED, Player& player);
     void Draw(Graphics& OLED);
     void Move();

@@ -6,37 +6,44 @@ Enemy::Enemy()
     scale = 3;
     speed = 1;
     health = 1;
-    canShoot = false;
+    isActive = false;
+    type = 0;
 }
 
-Enemy::Enemy(Vector2 pos, int scale, int speed, int health, bool canShoot)
+Enemy::Enemy(Vector2 pos, int scale, int speed, int health)
 {
     this->position = pos;
     this->scale = scale;
     this->speed = speed;
     this->health = health;
-    this->canShoot = canShoot;
 }
-void Enemy::Setup(Vector2 pos, int speed)
+void Enemy::Setup(Vector2 pos, int speed, int type)
 {
     this->position = pos;
     this->speed = speed;
+    this->type = type;
+    isActive = true;
+    this->health = 1;
 }
+
 void Enemy::Update(Graphics& OLED, Player& player)
 {
     Move();
     Draw(OLED);
     if(position.x <= 0)
     {
-        position.x = 125;
+        isActive = false;
     }
     for(int i = 0; i < 17; i++)
     {
         if(HasCollided(player.bullets[i].position))
         {
+
             Destroy();
             player.bullets[i].Destroy();
-            player.score += 200;
+            player.score += 75;
+
+            
         }
         else if(HasCollided(player.position) && player.damageCooldown == 0)
         {
@@ -49,7 +56,15 @@ void Enemy::Draw(Graphics& OLED)
 {
     if(health >= 1)
     {
-        OLED.Circle(position, scale, false);
+        switch(type)
+        {
+            case 0:
+                OLED.Circle(position, scale, false);
+                break;
+            case 1:
+                OLED.Rectangle(position, Vector2(scale + 4, scale + 4));
+        }
+        
     }
     
 }
@@ -87,4 +102,7 @@ bool Enemy::HasCollided(Vector2 position)
 void Enemy::Destroy()
 {
     health--;
+    isActive = false;
 }
+
+

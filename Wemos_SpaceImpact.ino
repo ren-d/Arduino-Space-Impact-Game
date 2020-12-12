@@ -2,8 +2,8 @@
 #include <iomanip>
 #include <iostream>
 #include "Vector2.h"
-int buttonPin = D5;
-
+int buttonPin = D4;
+int ledPin = D3;
 #include "Graphics.h"
 Graphics OLED;
 
@@ -11,40 +11,122 @@ Graphics OLED;
 Player player;
 
 #include "Enemy.h"
-Enemy enemies[5];
+Enemy enemies[50];
 
 #include "Math.h"
 Math mathf;
+#include <InvertedTM1638.h>
+#include <TM1638.h>
+#include <TM1638QYF.h>
+#include <TM1640.h>
+#include <TM16XX.h>
+#include <TM16XXFonts.h>
+#define TM1638_STB D5
+#define TM1638_CLK D6
+#define TM1638_DIO D7
+TM1638 module(TM1638_DIO, TM1638_CLK, TM1638_STB);
+byte buttons;
+
+
+#include <Servo.h>
+
+Servo myservo;
 
 void DebugUI(int sensor, int button);
 void GameScreenUI();
 void MenuUI();
+void extBoardLEDsForward();
+void extBoardLEDsBackward();
+void spawnEnemies();
 bool damageCooldown = false;
 
 void setup()
 {
  Serial.begin(115200);
  OLED.blah();
+ module.clearDisplay();
+ module.setupDisplay(true, 2);
 
- enemies[0].Setup(Vector2(120, 55), 2);
- enemies[1].Setup(Vector2(126, 41), 1);
- enemies[2].Setup(Vector2(150, 27), 7);
- enemies[3].Setup(Vector2(144, 37), 3);
- enemies[4].Setup(Vector2(140, 29), 3);
  
-
+ myservo.attach(D0);
+ myservo.write(20);
  pinMode(buttonPin, INPUT_PULLUP);
+ pinMode(ledPin, OUTPUT);
 }
 
+void servoHealth()
+{
+    switch(player.health)
+    {
+        case 3:
+            myservo.write(20);
+            break;
+        case 2:
+            myservo.write(60);
+            break;
+        case 1:
+            myservo.write(120);
+            break;
+        case 0:
+            myservo.write(190);
+            break;
+    }
+
+}
+
+void ledSwitch()
+{
+    if(digitalRead(buttonPin) == 0)
+    {
+        digitalWrite(ledPin, HIGH);
+    } 
+    else
+    {
+        digitalWrite(ledPin, LOW);
+    }
+    
+}
 bool menuEnd = false;
 void loop()
 {
+    servoHealth();
+    
     OLED.Clear();
-
+    ledSwitch();
     switch(menuEnd)
     {
         case true:
-            GameLoop();
+            if(player.health > 0)
+            {
+                GameLoop();
+            }
+            else
+            {
+                myservo.write(190);
+                buttons = module.getButtons();
+                OLED.PrintToScreen("Your score was: ", Vector2(0, 8));
+                OLED.PrintToScreen(String(player.score));
+                OLED.endlg();
+                OLED.endlg();
+                OLED.PrintToScreen("Press S1 on the");
+                OLED.endlg();
+                OLED.PrintToScreen("expansion board to");
+                OLED.endlg();
+                OLED.PrintToScreen("play again");
+                if(buttons == 0x0001)
+                {
+                    menuEnd = false;
+                    player.health = 3;
+                    player.score = 0;
+                    for(int i = 0; i < 50; i++)
+                    {
+                        enemies[i].Destroy();
+                    }
+                    module.setDisplayToDecNumber(player.score, 0, false);
+                }
+            }
+            
+            
             break;
         case false:
             MenuUI();
@@ -57,23 +139,32 @@ void loop()
 void GameLoop()
 {
     
+    module.setDisplayToDecNumber(player.score, 0, false);
     int sensorValue = analogRead(A0) / 10.24;
     player.Update(digitalRead(buttonPin), OLED);
-    
-    for(int i = 0; i < 5; i++)
+    spawnEnemies();
+    for(int i = 0; i < 50; i++)
     {
-        enemies[i].Update(OLED, player);
-        if(damageCooldown == false)
+        switch(enemies[i].isActive)
         {
-           if(enemies[i].HasCollided(player.position))
-           {
-               player.TakeDamage();
-               damageCooldown = true;
-               player.damageCooldown = 20;
+            case true:
 
-           }
+                enemies[i].Update(OLED, player);
+                if(damageCooldown == false)
+                {
+                    if(enemies[i].HasCollided(player.position))
+                    {
+                        player.TakeDamage();
+                        damageCooldown = true;
+                        player.damageCooldown = 20;
+
+                    }
+                }
+                break;
+            case false:
+                break;
         }
-
+        
         
     }
     
@@ -143,15 +234,97 @@ void MenuUI()
         {
             menuEnd = true;
         }
+        extBoardLEDsForward();
     }
     else
     {
         OLED.PrintToScreen("  Start Game", Vector2(32,21));
         OLED.PrintToScreen("> Credits", Vector2(37,35));
         menuEnd = false;
+        extBoardLEDsBackward();
     }
 
-    
-    
-    
+}
+
+int ledPos = 0;
+
+void extBoardLEDsForward()
+{
+    if(ledPos > 0)
+        module.setLED(TM1638_COLOR_NONE, ledPos - 1);
+        
+        if(ledPos == 8)
+        ledPos = 0;
+
+        module.setLED(TM1638_COLOR_RED, ledPos);
+        ledPos++;
+}
+
+void extBoardLEDsBackward()
+{
+    if(ledPos < 7)
+         module.setLED(TM1638_COLOR_NONE, ledPos + 1);
+        
+        if(ledPos == -1)
+            ledPos = 7;
+
+        module.setLED(TM1638_COLOR_RED, ledPos);
+        ledPos--;
+}
+
+
+int difficulty = 2;
+int lowerend = 1;
+void spawnEnemies()
+{
+    int randNum = random(0, 101);
+
+    if(player.score > 100)
+    {
+        lowerend = 1;
+        difficulty = 3;
+    }
+    else if (player.score > 1000)
+    {
+        lowerend = 2;
+        difficulty = 4;
+    }
+    else if (player.score > 2500)
+    {
+        lowerend = 3;
+        difficulty = 5;
+    }
+    else if (player.score > 5000)
+    {
+        lowerend = 4;
+        difficulty = 5;
+    }
+    else if (player.score > 7500)
+    {
+        lowerend = 4;
+        difficulty = 6;
+    }
+    else if (player.score > 10000)
+    {
+        lowerend = 5;
+        difficulty = 6;
+    }
+    else if (player.score > 15000)
+    {
+        lowerend = 8;
+        difficulty = 15;
+    }
+
+    if(randNum > 75)
+    {
+        for(int i = 0; i < 50; i++)
+        {
+            if(!enemies[i].isActive)
+            {
+                enemies[i].Setup(Vector2(128,random(16,64)), random(lowerend,difficulty), random(0, 2));
+                i++;
+                break;
+            }
+        }     
+    }
 }
