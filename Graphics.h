@@ -6,6 +6,7 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306.h"
 
+//defines the OLED graphics settings
 #define OLED_RESET -1
 #define OLED_SCREEN_I2C_ADDRESS 0x3C
 

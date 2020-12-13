@@ -65,7 +65,7 @@ void setup()
 
 //resets and sets up the extension board for usage
  module.clearDisplay();
- module.setupDisplay(true, 7);
+ module.setupDisplay(true, 7); //sets brightness of seven seg to max
 
  //attatches the servo to the D0 port and setting it to 20 as the default start
  myservo.attach(D0);

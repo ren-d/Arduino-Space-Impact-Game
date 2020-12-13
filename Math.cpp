@@ -1,5 +1,7 @@
 #include "Math.h"
 #include <cmath>
+
+//clamps a value to a certain bounds
 int Math::Clamp(int value, int min, int max)
 {
     if(value > max)
@@ -16,6 +18,7 @@ int Math::Clamp(int value, int min, int max)
     }
 }
 
+//square roots
 float Math::SQRT(int value)
 {
     return sqrt(value);

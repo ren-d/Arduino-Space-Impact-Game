@@ -1,5 +1,7 @@
 #include "Enemy.h"
 #include "Streaming.h"
+
+//Constructor for the Enemy class, with default valus
 Enemy::Enemy()
 {
     position = Vector2(120, 41);
@@ -10,13 +12,15 @@ Enemy::Enemy()
     type = 0;
 }
 
-Enemy::Enemy(Vector2 pos, int scale, int speed, int health)
+Enemy::Enemy(Vector2 pos, int scale, int speed, int health) //secondary constructer with settable values
 {
     this->position = pos;
     this->scale = scale;
     this->speed = speed;
     this->health = health;
 }
+
+//external function to setup the enemy
 void Enemy::Setup(Vector2 pos, int speed, int type)
 {
     this->position = pos;
@@ -26,6 +30,7 @@ void Enemy::Setup(Vector2 pos, int speed, int type)
     this->health = 1;
 }
 
+//runs every frame
 void Enemy::Update(Graphics& OLED, Player& player)
 {
     Move();
@@ -36,12 +41,12 @@ void Enemy::Update(Graphics& OLED, Player& player)
     }
     for(int i = 0; i < 17; i++)
     {
-        if(HasCollided(player.bullets[i].position))
+        if(HasCollided(player.bullets[i].position)) //checks if the enemy has collided with a bullet
         {
 
             Destroy();
-            player.bullets[i].Destroy();
-            player.score += 75;
+            player.bullets[i].Destroy(); //destroys the bullet
+            player.score += 75; // adds score to the player
 
             
         }
@@ -52,6 +57,8 @@ void Enemy::Update(Graphics& OLED, Player& player)
     }
 }
 
+
+//draws the enemy depending on the type
 void Enemy::Draw(Graphics& OLED)
 {
     if(health >= 1)
@@ -69,6 +76,7 @@ void Enemy::Draw(Graphics& OLED)
     
 }
 
+//moves the enemy by its speed
 void Enemy::Move()
 {
     if(health >= 1)
@@ -83,6 +91,7 @@ void Enemy::Move()
     
 }
 
+//uses a basic circle collision algorithm to check if anything has collided wtih the enemy
 bool Enemy::HasCollided(Vector2 position)
 {
     int dx = abs(position.x - this->position.x);
@@ -99,6 +108,7 @@ bool Enemy::HasCollided(Vector2 position)
     }
 }
 
+//destroys the enemy
 void Enemy::Destroy()
 {
     health--;

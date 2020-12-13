@@ -1,4 +1,6 @@
 #include "Player.h"
+
+//default player constructor
 Player::Player()
 {
     score = 0;
@@ -6,6 +8,7 @@ Player::Player()
     damageCooldown = 0;
     bulletCooldown = 7;
     buttonBuffer = false;
+    //initialises all the bullets
     for (int i = 0; i < 17; i++)
     {
         bullets[i].Initialize();
@@ -13,15 +16,18 @@ Player::Player()
 
 }
 
+//moves the player
 void Player::Move(Vector2 position, Graphics& OLED)
 {
     this->position = position;
     Draw(position, false, OLED);
 }
 
+//draws the player depending on the position
 void Player::Draw(Vector2 position, bool onCooldown, Graphics& OLED)
 {
     this->position = position;
+    //plays animation for when the player is on cooldown
     if(health >= 1)
     {
         if(!onCooldown)
@@ -55,11 +61,13 @@ void Player::Draw(Vector2 position, bool onCooldown, Graphics& OLED)
     }
 }
 
+//main update loop played every frame for the player
 void Player::Update(int buttonPin, Graphics& OLED)
 {
 
     if(health > 0)
     {
+        //checks if the button is pressed and  shoots a bullet
         if(buttonPin == 0 && buttonBuffer == false)
         {
             for(int i = 0; i < 17; i++)
@@ -69,7 +77,7 @@ void Player::Update(int buttonPin, Graphics& OLED)
                     if(bulletCooldown < 0)
                     {
                         Shoot(bullets[i]);
-                        bulletCooldown = 7;
+                        bulletCooldown = 12;
                         buttonBuffer = false;
                         break;
                     }
@@ -79,6 +87,7 @@ void Player::Update(int buttonPin, Graphics& OLED)
         }
         for(int i = 0; i < 17; i++)
         {
+            //updates all the bullets
             bullets[i].Update(OLED);
         }
         bulletCooldown--;
@@ -87,6 +96,7 @@ void Player::Update(int buttonPin, Graphics& OLED)
     }
     
 }
+
 
 void Player::ButtonPress(int buttonPin) // Only activates the bullet when button is pressed and not held, if held it will not shoot more than once
 {
@@ -102,6 +112,7 @@ void Player::ButtonPress(int buttonPin) // Only activates the bullet when button
     }
 }
 
+//makes the player take damage
 void Player::TakeDamage()
 {
     if(health > 0)
@@ -111,6 +122,7 @@ void Player::TakeDamage()
     
 }
 
+//shoots a bullet
 void Player::Shoot(Bullet& bullet)
 {
     bullet.isShot = true;
