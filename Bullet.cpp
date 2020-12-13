@@ -4,6 +4,7 @@ Bullet::Bullet()
     Initialize();
 }
 
+//updates the bullet's position every frame if the bullet has been shot
 void Bullet::Update(Graphics& OLED)
 {
     if(isShot)
@@ -20,6 +21,8 @@ void Bullet::Update(Graphics& OLED)
     }
 }
 
+
+//renders the bullet
 void Bullet::Draw(Graphics& OLED)
 {
     if(isShot)
@@ -28,6 +31,7 @@ void Bullet::Draw(Graphics& OLED)
     }
 }
 
+//destroys the bullet
 void Bullet::Destroy()
 {
     isShot = false;
