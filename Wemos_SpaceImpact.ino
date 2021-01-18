@@ -25,12 +25,9 @@ Enemy enemies[50]; //array defining the max amount of enemies on the screen at o
 Math mathf;
 
 // Extension board includes and pre-requisites
-#include <InvertedTM1638.h>
+
 #include <TM1638.h>
-#include <TM1638QYF.h>
-#include <TM1640.h>
-#include <TM16XX.h>
-#include <TM16XXFonts.h>
+
 // port definitions for the extension board
 #define TM1638_STB D5
 #define TM1638_CLK D6
